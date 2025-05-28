@@ -34,8 +34,6 @@ server.get('/checkout', async (req, res) => {
         //acessando e definindo latitude de cada objeto
         const corduser = { lat: LocationLatAndLog.userLocation.features[0].properties.lat, lon: LocationLatAndLog.userLocation.features[0].properties.lon };
         const cordloja = { lat: LocationLatAndLog.LojaLocation.features[0].properties.lat, lon: LocationLatAndLog.LojaLocation.features[0].properties.lon };
-        //const calcPointAPointB= await fetch(`https://api.geoapify.com/v1/routing?waypoints=${LocationLatAndLog.userLocation.features[0].properties.lat},${LocationLatAndLog.userLocation.features[0].properties.lon}|${LocationLatAndLog.LojaLocation.features[0].properties.lat},${LocationLatAndLog.LojaLocation.features[0].properties.lon}&mode=drive&apiKey=2bdbaaa485ca4734af497066f9f2670a`)
-        //const rescalc= await calcPointAPointB.json()
         //realizando calculo haversine
         const distance = (0, haversine_distance_1.default)(corduser, cordloja);
         //faz o calculo de frente com base na distancia do Ponto A a Ponto B
