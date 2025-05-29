@@ -11,32 +11,36 @@ const apiKey = process.env.API_KEY;
 const cors_1 = __importDefault(require("cors"));
 const server = (0, express_1.default)();
 server.use((0, cors_1.default)());
-server.get('/checkout', async (req, res) => {
-    const origincepuser = '61618-200';
+server.use(express_1.default.json());
+server.post('/checkout', async (req, res) => {
+    var _a, _b;
+    const { location, state, cep } = req.body;
+    console.log(req.body);
     const LocationLatAndLog = {
-        userLocation: { type: null, features: [] },
-        LojaLocation: { type: null, features: [] }
+        userLocation: { type: null, features: [], query: null },
+        LojaLocation: { type: null, features: [], query: null }
     };
-    console.log('CWD:', process.cwd());
-    console.log('ENV VARS:', process.env);
     //buscar geolocalizacao com base no cep
-    try {
-        //busca geolocalizacao de cep do usuario
-        const reqgeopifyuser = await fetch(`https://api.geoapify.com/v1/geocode/search?text=${origincepuser},Caucaia,CE,Brazil&apiKey=${apiKey}`);
-        //busca geolocalizacao de cep da loja
-        const reqgeopifyloja = await fetch(`https://api.geoapify.com/v1/geocode/search?text=05407-002,Caucaia,CE,Brazil&apiKey=${apiKey}`);
-        //recebe os resultados separadamente e arquivos json
-        const datauser = await reqgeopifyuser.json();
-        const dataloja = await reqgeopifyloja.json();
-        //pasa os resultados para os objetos separadamente
-        LocationLatAndLog.userLocation = datauser;
-        LocationLatAndLog.LojaLocation = dataloja;
-    }
-    catch (error) {
-        res.send(error);
+    if (location != '' && state != '' && cep != '') {
+        try {
+            //busca geolocalizacao de cep do usuario
+            const reqgeopifyuser = await fetch(`https://api.geoapify.com/v1/geocode/search?text=${cep},${location},${state},Brazil&apiKey=${apiKey}`);
+            //busca geolocalizacao de cep da loja
+            const reqgeopifyloja = await fetch(`https://api.geoapify.com/v1/geocode/search?text=05407-002,Caucaia,CE,Brazil&apiKey=${apiKey}`);
+            //recebe os resultados separadamente e arquivos json
+            const datauser = await reqgeopifyuser.json();
+            const dataloja = await reqgeopifyloja.json();
+            //pasa os resultados para os objetos separadamente
+            LocationLatAndLog.userLocation = datauser;
+            LocationLatAndLog.LojaLocation = dataloja;
+        }
+        catch (error) {
+            res.send(error);
+        }
     }
     //quando os dois objetos estiverem prontos, realize a requisicao de distancia
-    if (LocationLatAndLog.LojaLocation && LocationLatAndLog.userLocation) {
+    if (((_a = LocationLatAndLog.LojaLocation.query) === null || _a === void 0 ? void 0 : _a.text) != '' && ((_b = LocationLatAndLog.userLocation.query) === null || _b === void 0 ? void 0 : _b.text) != '') {
+        console.log(LocationLatAndLog);
         //acessando e definindo latitude de cada objeto
         const corduser = { lat: LocationLatAndLog.userLocation.features[0].properties.lat, lon: LocationLatAndLog.userLocation.features[0].properties.lon };
         const cordloja = { lat: LocationLatAndLog.LojaLocation.features[0].properties.lat, lon: LocationLatAndLog.LojaLocation.features[0].properties.lon };
@@ -57,7 +61,11 @@ server.get('/checkout', async (req, res) => {
         console.log('erro de calculo');
     }
 });
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 server.listen(port, function () {
     console.log('servidor rodando na porta:' + port);
+});
+server.use((err, req, res, next) => {
+    console.error('Erro interno:', err);
+    res.status(500).send('Erro interno do servidor.');
 });
