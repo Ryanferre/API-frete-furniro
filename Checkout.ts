@@ -77,3 +77,7 @@ server.listen(port, function(){
     console.log('servidor rodando na porta:' + port)
 })
 
+server.use((err: any, req: any, res: any, next: any) => {
+  console.error('Erro interno:', err);
+  res.status(500).send('Erro interno do servidor.');
+});
