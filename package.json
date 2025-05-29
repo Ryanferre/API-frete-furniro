@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "start": "node dist/Checkout.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
