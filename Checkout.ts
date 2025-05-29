@@ -1,6 +1,8 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
 import haversine from 'haversine-distance'
-import { apiKey } from './config';
+const apiKey = process.env.API_KEY
 
 const server= express()
 
@@ -22,6 +24,9 @@ server.get('/checkout', async (req, res)=>{
         userLocation: {type: null, features: []},
         LojaLocation:{type: null, features: []}
     }
+
+    console.log('CWD:', process.cwd());
+    console.log('ENV VARS:', process.env);
 
     //buscar geolocalizacao com base no cep
     try{

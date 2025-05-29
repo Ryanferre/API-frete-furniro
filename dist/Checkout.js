@@ -3,9 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const express_1 = __importDefault(require("express"));
 const haversine_distance_1 = __importDefault(require("haversine-distance"));
-const config_1 = require("./config");
+const apiKey = process.env.API_KEY;
 const server = (0, express_1.default)();
 server.get('/checkout', async (req, res) => {
     const origincepuser = '61618-200';
@@ -13,12 +15,14 @@ server.get('/checkout', async (req, res) => {
         userLocation: { type: null, features: [] },
         LojaLocation: { type: null, features: [] }
     };
+    console.log('CWD:', process.cwd());
+    console.log('ENV VARS:', process.env);
     //buscar geolocalizacao com base no cep
     try {
         //busca geolocalizacao de cep do usuario
-        const reqgeopifyuser = await fetch(`https://api.geoapify.com/v1/geocode/search?text=${origincepuser},Caucaia,CE,Brazil&apiKey=${config_1.apiKey}`);
+        const reqgeopifyuser = await fetch(`https://api.geoapify.com/v1/geocode/search?text=${origincepuser},Caucaia,CE,Brazil&apiKey=${apiKey}`);
         //busca geolocalizacao de cep da loja
-        const reqgeopifyloja = await fetch(`https://api.geoapify.com/v1/geocode/search?text=05407-002,Caucaia,CE,Brazil&apiKey=${config_1.apiKey}`);
+        const reqgeopifyloja = await fetch(`https://api.geoapify.com/v1/geocode/search?text=05407-002,Caucaia,CE,Brazil&apiKey=${apiKey}`);
         //recebe os resultados separadamente e arquivos json
         const datauser = await reqgeopifyuser.json();
         const dataloja = await reqgeopifyloja.json();
