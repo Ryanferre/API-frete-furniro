@@ -3,9 +3,10 @@ dotenv.config();
 import express from 'express';
 import haversine from 'haversine-distance'
 const apiKey = process.env.API_KEY
+import cors from 'cors'
 
 const server= express()
-
+server.use(cors())
 //tipagem para os objetos de geolocalizacao
 type Location = {
   type: string | null;
@@ -72,7 +73,7 @@ server.get('/checkout', async (req, res)=>{
 })
 
 const port= process.env.PORT || 3000
-server.listen(port, ()=>{
+server.listen(port, function(){
     console.log('servidor rodando na porta:' + port)
 })
 
