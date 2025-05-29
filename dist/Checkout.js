@@ -8,7 +8,9 @@ dotenv_1.default.config();
 const express_1 = __importDefault(require("express"));
 const haversine_distance_1 = __importDefault(require("haversine-distance"));
 const apiKey = process.env.API_KEY;
+const cors_1 = __importDefault(require("cors"));
 const server = (0, express_1.default)();
+server.use((0, cors_1.default)());
 server.get('/checkout', async (req, res) => {
     const origincepuser = '61618-200';
     const LocationLatAndLog = {
@@ -55,7 +57,7 @@ server.get('/checkout', async (req, res) => {
         console.log('erro de calculo');
     }
 });
-const port = process.env.PORT || 3000;
-server.listen(port, () => {
+const port = process.env.PORT;
+server.listen(port, function () {
     console.log('servidor rodando na porta:' + port);
 });

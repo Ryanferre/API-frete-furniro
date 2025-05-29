@@ -72,7 +72,7 @@ server.get('/checkout', async (req, res)=>{
     }
 })
 
-const port= process.env.PORT || 3000
+const port= process.env.PORT
 server.listen(port, function(){
     console.log('servidor rodando na porta:' + port)
 })
