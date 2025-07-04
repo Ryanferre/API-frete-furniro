@@ -40,20 +40,22 @@ server.post('/checkout', async (req, res) => {
     }
     //quando os dois objetos estiverem prontos, realize a requisicao de distancia
     if (((_a = LocationLatAndLog.LojaLocation.query) === null || _a === void 0 ? void 0 : _a.text) != '' && ((_b = LocationLatAndLog.userLocation.query) === null || _b === void 0 ? void 0 : _b.text) != '') {
-        console.log(LocationLatAndLog);
         //acessando e definindo latitude de cada objeto
         const corduser = { lat: LocationLatAndLog.userLocation.features[0].properties.lat, lon: LocationLatAndLog.userLocation.features[0].properties.lon };
         const cordloja = { lat: LocationLatAndLog.LojaLocation.features[0].properties.lat, lon: LocationLatAndLog.LojaLocation.features[0].properties.lon };
         //realizando calculo haversine
         const distance = (0, haversine_distance_1.default)(corduser, cordloja);
-        //faz o calculo de frente com base na distancia do Ponto A a Ponto B
+        console.log("essa e a distancia" + distance);
+        //faz o calculo de frete com base na distancia do Ponto A a Ponto B
         if (distance) {
             const calcPrice = Math.max(distance / 1000 * 300);
-            //converte em modeda brasileira(real)
+            console.log("essa e o preco" + calcPrice);
+            //converte em moeda brasileira(real)
             const convertCoin = calcPrice.toLocaleString('pt-br', {
                 style: 'currency',
                 currency: 'BRL',
             });
+            console.log(convertCoin);
             res.send(convertCoin);
         }
     }

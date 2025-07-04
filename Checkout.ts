@@ -41,7 +41,7 @@ server.post('/checkout', async (req, res)=>{
             //busca geolocalizacao de cep do usuario
             const reqgeopifyuser= await fetch(`https://api.geoapify.com/v1/geocode/search?text=${cep},${location},${state},Brazil&apiKey=${apiKey}`)
             //busca geolocalizacao de cep da loja
-            const reqgeopifyloja= await fetch(`https://api.geoapify.com/v1/geocode/search?text=05407-002,Caucaia,CE,Brazil&apiKey=${apiKey}`)
+            const reqgeopifyloja= await fetch(`https://api.geoapify.com/v1/geocode/search?text=04107-030,Caucaia,CE,Brazil&apiKey=${apiKey}`)
             //recebe os resultados separadamente e arquivos json
             const datauser= await reqgeopifyuser.json()
             const dataloja= await reqgeopifyloja.json()
@@ -57,14 +57,15 @@ server.post('/checkout', async (req, res)=>{
     //quando os dois objetos estiverem prontos, realize a requisicao de distancia
     if(LocationLatAndLog.LojaLocation.query?.text !='' && LocationLatAndLog.userLocation.query?.text != ''){
 
-        console.log(LocationLatAndLog)
+
         //acessando e definindo latitude de cada objeto
         const corduser= {lat: LocationLatAndLog.userLocation.features[0].properties.lat, lon: LocationLatAndLog.userLocation.features[0].properties.lon}
         const cordloja= {lat: LocationLatAndLog.LojaLocation.features[0].properties.lat, lon: LocationLatAndLog.LojaLocation.features[0].properties.lon}
 
         //realizando calculo haversine
         const distance= haversine(corduser, cordloja)
-        //faz o calculo de frente com base na distancia do Ponto A a Ponto B
+
+        //faz o calculo de frete com base na distancia do Ponto A a Ponto B
         if(distance){
             const calcPrice= Math.max(distance / 1000 * 300)
 
@@ -73,6 +74,8 @@ server.post('/checkout', async (req, res)=>{
                 style: 'currency',
                 currency: 'BRL',
             })
+
+            console.log(convertCoin)
             res.send(convertCoin)
         }
     }else{
