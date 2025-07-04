@@ -26,7 +26,7 @@ server.post('/checkout', async (req, res) => {
             //busca geolocalizacao de cep do usuario
             const reqgeopifyuser = await fetch(`https://api.geoapify.com/v1/geocode/search?text=${cep},${location},${state},Brazil&apiKey=${apiKey}`);
             //busca geolocalizacao de cep da loja
-            const reqgeopifyloja = await fetch(`https://api.geoapify.com/v1/geocode/search?text=05407-002,Caucaia,CE,Brazil&apiKey=${apiKey}`);
+            const reqgeopifyloja = await fetch(`https://api.geoapify.com/v1/geocode/search?text=04107030,Caucaia,CE,Brazil&apiKey=${apiKey}`);
             //recebe os resultados separadamente e arquivos json
             const datauser = await reqgeopifyuser.json();
             const dataloja = await reqgeopifyloja.json();
@@ -45,17 +45,14 @@ server.post('/checkout', async (req, res) => {
         const cordloja = { lat: LocationLatAndLog.LojaLocation.features[0].properties.lat, lon: LocationLatAndLog.LojaLocation.features[0].properties.lon };
         //realizando calculo haversine
         const distance = (0, haversine_distance_1.default)(corduser, cordloja);
-        console.log("essa e a distancia" + distance);
         //faz o calculo de frete com base na distancia do Ponto A a Ponto B
         if (distance) {
             const calcPrice = Math.max(distance / 1000 * 300);
-            console.log("essa e o preco" + calcPrice);
             //converte em moeda brasileira(real)
             const convertCoin = calcPrice.toLocaleString('pt-br', {
                 style: 'currency',
                 currency: 'BRL',
             });
-            console.log(convertCoin);
             res.send(convertCoin);
         }
     }

@@ -41,7 +41,7 @@ server.post('/checkout', async (req, res)=>{
             //busca geolocalizacao de cep do usuario
             const reqgeopifyuser= await fetch(`https://api.geoapify.com/v1/geocode/search?text=${cep},${location},${state},Brazil&apiKey=${apiKey}`)
             //busca geolocalizacao de cep da loja
-            const reqgeopifyloja= await fetch(`https://api.geoapify.com/v1/geocode/search?text=04107-030,Caucaia,CE,Brazil&apiKey=${apiKey}`)
+            const reqgeopifyloja= await fetch(`https://api.geoapify.com/v1/geocode/search?text=04107030,Caucaia,CE,Brazil&apiKey=${apiKey}`)
             //recebe os resultados separadamente e arquivos json
             const datauser= await reqgeopifyuser.json()
             const dataloja= await reqgeopifyloja.json()
@@ -74,8 +74,6 @@ server.post('/checkout', async (req, res)=>{
                 style: 'currency',
                 currency: 'BRL',
             })
-
-            console.log(convertCoin)
             res.send(convertCoin)
         }
     }else{
